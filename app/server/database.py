@@ -13,13 +13,15 @@ user_collection = database.get_collection("users_collection")
 
 # helpers
 
+
 def user_helper(user) -> dict:
     return {
-            "id": str(user["_id"]),
-            "fullname": user["fullname"],
-            "height": user["height"],
-            "weight": user["weight"],
-            }
+        "id": str(user["_id"]),
+        "fullname": user["fullname"],
+        "height": user["height"],
+        "weight": user["weight"],
+    }
+
 
 # Retrieve all users present in the database
 async def retrieve_users():
@@ -28,11 +30,13 @@ async def retrieve_users():
         users.append(user_helper(user))
     return users
 
+
 # Add a new user into the database
 async def add_user(user_data: dict) -> dict:
     user = await user_collection.insert_one(user_data)
     new_user = await user_collection.find_one({"_id": user.inserted_id})
     return user_helper(new_user)
+
 
 # Retrieve a user with a matching ID
 async def retrieve_user(id: str) -> dict:
@@ -40,18 +44,20 @@ async def retrieve_user(id: str) -> dict:
     if user:
         return user_helper(user)
 
-#Update a user with a matching ID
+
+# Update a user with a matching ID
 async def update_user(id: str, data: dict):
     if len(data) < 1:
         return False
     user = await user_collection.find_one({"_id": ObjectId(id)})
     if user:
         updated_user = await user_collection.update_one(
-                {"_id": ObjectId(id)}, {"$set": data}
-                )
+            {"_id": ObjectId(id)}, {"$set": data}
+        )
         if updated_user:
             return True
         return False
+
 
 # Delete a user from the database
 async def delete_user(id: str):
